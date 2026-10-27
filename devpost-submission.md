@@ -1,7 +1,7 @@
 # GoldenEpics Qloo Creative Agent
 
 ## One-line Summary
-Turn cultural interests into advertising directions with evidence you can follow.
+Turn a rough business brief into a campaign plan—and see how cultural evidence changes the creative.
 
 ## Problem
 Small businesses can describe what they sell, but translating their audience's interests into a specific creative direction takes research. Generic campaign templates often skip that connection, leaving teams with plausible ideas and little explanation of why they fit.
