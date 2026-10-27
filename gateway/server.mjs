@@ -40,7 +40,7 @@ export function runHarness(args) {
     });
   });
 }
-export function makeGateway({ token, execute = runHarness, maxCalls = 100, now = Date.now, concurrency = 2 } = {}) {
+export function makeGateway({ token, execute = runHarness, configured = true, maxCalls = 100, now = Date.now, concurrency = 2 } = {}) {
   const cache = new Map(); const pending = new Map();
   let active = 0; let calls = 0; let day = Math.floor(now() / 86400000);
   const ttl = 10 * 60000;
@@ -48,7 +48,7 @@ export function makeGateway({ token, execute = runHarness, maxCalls = 100, now =
     const requestId = randomUUID();
     const send = (status, data) => { res.writeHead(status, { 'content-type': 'application/json', 'cache-control': 'no-store', 'x-request-id': requestId, ...(status === 429 ? { 'retry-after': '60' } : {}) }); res.end(JSON.stringify(data)); };
     if (!authorized(req.headers.authorization, token)) return send(401, { error: 'gateway_access_required' });
-    if (req.method === 'GET' && req.url === '/health') return send(200, { status: 'ready', harness: '0.1.26', usage: calls, limit: maxCalls });
+    if (req.method === 'GET' && req.url === '/health') return send(200, { status: configured ? 'ready' : 'awaiting_key', liveVerified: false, harness: '0.1.26', usage: calls, limit: maxCalls });
     if (req.method !== 'POST' || !['/search', '/insights'].includes(req.url)) return send(404, { error: 'unsupported_operation' });
     try {
       let raw = ''; let size = 0;
@@ -56,6 +56,7 @@ export function makeGateway({ token, execute = runHarness, maxCalls = 100, now =
       let body;
       try { body = JSON.parse(raw); } catch { return send(400, { error: 'invalid_json' }); }
       const command = commandFor(req.url.slice(1), body);
+      if (!configured) return send(503, { error: 'qloo_key_pending' });
       const key = JSON.stringify(command); const cached = cache.get(key);
       if (cached && cached.expires > now()) return send(200, { ...cached.value, _gateway: { cached: true } });
       if (pending.has(key)) return send(200, { ...await pending.get(key), _gateway: { cached: true } });
@@ -74,12 +75,12 @@ export function makeGateway({ token, execute = runHarness, maxCalls = 100, now =
   };
 }
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
-  if (!process.env.QLOO_API_KEY || !process.env.QLOO_GATEWAY_TOKEN || process.env.QLOO_GATEWAY_TOKEN.length < 24) {
-    console.error('Configure QLOO_API_KEY and a QLOO_GATEWAY_TOKEN of at least 24 characters in the server environment.');
+  if (!process.env.QLOO_GATEWAY_TOKEN || process.env.QLOO_GATEWAY_TOKEN.length < 24) {
+    console.error('Configure a QLOO_GATEWAY_TOKEN of at least 24 characters in the server environment.');
     process.exitCode = 1;
   } else {
     const maxCalls = Math.min(1000, Math.max(1, Number(process.env.QLOO_DAILY_MAX_CALLS) || 100));
-    const server = createServer(makeGateway({ token: process.env.QLOO_GATEWAY_TOKEN, maxCalls }));
+    const server = createServer(makeGateway({ token: process.env.QLOO_GATEWAY_TOKEN, configured: Boolean(process.env.QLOO_API_KEY), maxCalls }));
     server.requestTimeout = 30000; server.headersTimeout = 10000;
     server.listen(Number(process.env.PORT) || 8788, process.env.BIND_HOST || '127.0.0.1', () => console.log('Qloo harness gateway ready.'));
   }

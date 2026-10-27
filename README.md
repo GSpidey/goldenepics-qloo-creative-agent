@@ -4,7 +4,7 @@ Turn cultural references into a campaign direction you can explain.
 
 A complete, scoped open-source application for the Qloo Agentic Hackathon. Describe a product, confirm cultural references, explore connected books, films and brands, then export a production brief with its evidence and research trail.
 
-**Current status:** interface, structured planner, exports and server gateway implemented. The fictional sample works without credentials. Live Qloo integration is **not yet verified**; event access and gateway hosting are pending. This is a development release, not a completed competition submission.
+**Current status:** interface, structured planner, exports and server gateway implemented. The fictional sample works without credentials. Live Qloo integration is **not yet verified**; event access is pending; a dedicated Cloudflare gateway has been provisioned. This is a development release, not a completed competition submission.
 
 ## Workflow
 
@@ -14,7 +14,7 @@ A complete, scoped open-source application for the Qloo Agentic Hackathon. Descr
 4. Compare three creative interpretations with evidence links.
 5. Select a direction, refine production notes, and export Markdown or JSON.
 
-The planner uses transparent deterministic rules, not an LLM. Qloo supplies cultural intelligence. This app orchestrates bounded research tools and proposes creative hypotheses. It does not generate videos, publish ads, or predict conversions. Scripts currently use a thirty-second scaffold; other format choices carry adaptation guidance.
+The planner uses transparent deterministic rules, not an LLM. Qloo supplies cultural intelligence. This app orchestrates bounded research tools and proposes creative hypotheses. It does not generate videos, publish ads, or predict conversions. Video formats use timed scenes; static formats use headline, body and call-to-action copy. Seven disclosed theme families respond to returned metadata; sparse metadata stays explicitly exploratory.
 
 ## Run the sample
 
@@ -36,7 +36,7 @@ pnpm typecheck
 pnpm build
 ```
 
-The public hosting manifest omits the author's Site identity. To host your own copy, create a Site, then run `node scripts/set-project-id.mjs --project-id YOUR_SITE_ID`. The private Studio is not needed.
+The public hosting manifest omits the author's Site identity. To host your own copy, create a Site, then set the returned `project_id` in `.openai/hosting.json` using the Sites setup workflow. The private Studio is not needed.
 
 ## Live Qloo setup
 
@@ -56,7 +56,7 @@ cp .env.example .env
 5. Configure the web app's **server runtime secrets**: `QLOO_GATEWAY_URL` (HTTPS origin) and the matching `QLOO_GATEWAY_TOKEN`. For local Wrangler development use untracked `.dev.vars`. A loopback gateway additionally needs `ALLOW_LOCAL_GATEWAY=1`. A cloud preview cannot reach your laptop's loopback address.
 6. Confirm a real entity, run the three-category research, and verify returned names/types and evidence before judging.
 
-The default gateway ceiling is 100 upstream attempts/day per process. This is an app ceiling, not the event quota: adjust downward to the actual allowance. It resets on restart; multi-instance installations need shared quota storage. No model subscription is required. The gateway bounds time/output, avoids a shell, briefly caches, deduplicates identical requests and uses no automatic retry fallback.
+The default gateway ceiling is 100 upstream attempts/day per process. This is an app ceiling, not the event quota: adjust downward to the actual allowance. The standalone Node ceiling resets on restart; the included Cloudflare Durable Object adds a shared durable ceiling that survives restarts. No model subscription is required. The gateway bounds time/output, avoids a shell, briefly caches, deduplicates identical requests and uses no automatic retry fallback.
 
 ### Docker gateway
 
@@ -100,3 +100,7 @@ An author-private development Site does not provide unrestricted judge access. O
 ## Relationship and license
 
 This independently runnable module contributes audience research to GoldenEpics Studio. Its complete scoped source is public; the wider Studio remains private. PayPal Campaign Commerce is separate. MIT; Qloo services remain subject to their own terms.
+
+## Judging and activation
+
+See [key activation](docs/KEY_ACTIVATION.md), [judge walkthrough](docs/JUDGE_WALKTHROUGH.md) and [submission draft](devpost-submission.md). The draft explicitly marks unresolved gates. Cloudflare gateway source is in `gateway/cloudflare/`; build its embedded bootstrap with `node gateway/cloudflare/build-bootstrap.mjs`. It uses the managed Node image and installs the pinned lockfile with lifecycle scripts disabled.

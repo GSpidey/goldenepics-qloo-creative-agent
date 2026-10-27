@@ -47,3 +47,18 @@ test('rate limits, authentication and response corruption have distinct recovery
 test('a failed provider payload is not mistaken for an empty successful response', async () => {
   await assert.rejects(gatewayRequest({ QLOO_GATEWAY_URL: 'https://gateway.example', QLOO_GATEWAY_TOKEN: 'secret' }, 'search', { query: 'Example', type: 'book' }, async () => Response.json({ success: false })), e => e.kind === 'service');
 });
+test('different cultural metadata produces different creative treatments and evidence reasons', () => {
+  const research = tags => ({mode:'live',groups:[{type:'book',items:[{id,name:'Reference',type:'book',tags}]}]});
+  const calm = makeDirections(sampleBrief,research(['mindfulness','quiet']));
+  const active = makeDirections(sampleBrief,research(['sport','dance']));
+  assert.equal(calm[0].theme,'reflection'); assert.equal(active[0].theme,'energy');
+  assert.notEqual(calm[0].script[0].picture,active[0].script[0].picture);
+  assert.deepEqual(active[0].evidenceIds,[id]); assert.ok(active[0].matchedSignals.includes('sport'));
+});
+test('missing metadata stays explicitly exploratory and static formats omit video timestamps', () => {
+  const research={groups:[{items:[{id,name:'Unknown context',type:'book'}]}]};
+  const directions=makeDirections({...sampleBrief,format:'Social carousel'},research);
+  assert.match(directions[0].evidenceBasis,/does not support/);
+  assert.equal(directions[0].script[0].time,'Headline');
+  assert.equal(directions[0].matchedSignals.length,0);
+});
