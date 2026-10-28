@@ -47,15 +47,15 @@ Not required by the fetched Qloo submission requirements. Prioritize a functiona
 Brief and overview; reference confirmation; compared directions; selected treatment with evidence; exported brief. Use live results only after verification; label any sample screenshots.
 
 ## Submission Readiness Notes
-DRAFT ONLY. No Devpost submission has been sent. Event key activation, public access and bounded live verification are complete. Registration still needs factual team/prior-use answers; no final submission has been sent. Retain this notice until each is actually resolved; do not paste readiness claims into Devpost prematurely.
+Submitted to the Qloo Agentic Hackathon and verified live on October 27, 2026 at 10:00 p.m. Vancouver (October 28 05:00 UTC). Devpost project 1514160; submission 1268630. Public page: https://devpost.com/software/goldenepics-qloo-creative-agent . Registration answers: Working solo; first time using Qloo. Rules, terms and eligibility approval were already recorded in the handoff.
 
 ## Known Limitations
 Creative interpretation is rule-based. Sparse metadata needs human research. Evidence is aggregate, not personal profiling or a conversion probability. Device-local briefs need export for portability. The service may need time to start after inactivity. No finished video generation or social publication is included in this focused entry.
 
-## TODO Official Form Fields
-Fetched from the authenticated Qloo requirements on October 27, 2026.
+## Submitted Official Form Fields
+Verified against authenticated Qloo requirements on October 27, 2026 (Vancouver).
 
 - 28597 — When did you begin your project? **October 27, 2026. The standalone Qloo implementation began on this date; the broader GoldenEpics Studio concept and RiseQuest advertising work predate it.**
 - 28598 — The public URL to your project: **https://goldenepics-qloo-creative-agent.bamidele-ada-9224.chatgpt.site**
 - 28599 — Link to your PUBLIC code repo: **https://github.com/GSpidey/goldenepics-qloo-creative-agent**
-- 28701 — Existing-project improvements (optional): **This is a new standalone Qloo application inspired by an existing advertising-studio project. New work includes exact Qloo entity selection, cross-domain research, evidence-sensitive creative treatments, provenance, exports and the server-side harness gateway. The wider Studio remains separate. Dependencies and the Sites starter are disclosed in the repository.**
+- 28701 — Existing-project improvements (optional): **New standalone app inspired by our existing Studio: exact Qloo references, cross-domain research, evidence-based treatments, provenance, exports and a server-side harness gateway. Studio stays separate; dependencies and starter are disclosed in the repo.**

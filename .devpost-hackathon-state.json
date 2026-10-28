@@ -1,0 +1,22 @@
+{
+  "hackathon_subdomain": "qloo",
+  "rules_acknowledged": true,
+  "registration": {
+    "status": "registered",
+    "team_preference": "Working solo",
+    "previous_qloo_use": "No"
+  },
+  "current_stage": "submit-project",
+  "completed_stages": [
+    "submit-project"
+  ],
+  "submission": {
+    "status": "submitted",
+    "project_id": 1514160,
+    "submission_id": 1268630,
+    "url": "https://devpost.com/software/goldenepics-qloo-creative-agent",
+    "submitted_at": "2026-10-28T05:00:51.102Z",
+    "verified_live": true
+  },
+  "next_command": "hackathon-map"
+}
