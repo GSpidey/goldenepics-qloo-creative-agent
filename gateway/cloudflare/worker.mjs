@@ -5,7 +5,9 @@ export class QlooGateway extends DurableObject {
   starting=null;
   async start() {
     const container=this.ctx.container;
-    if(!container.running) container.start({image:'cloudflare/debian-trixie',instance:'lite',enableInternet:true,entrypoint:['node','-e',bootstrap],env:{QLOO_GATEWAY_TOKEN:this.env.QLOO_GATEWAY_TOKEN,QLOO_API_KEY:this.env.QLOO_API_KEY||'',QLOO_DAILY_MAX_CALLS:this.env.QLOO_DAILY_MAX_CALLS||'100',BIND_HOST:'0.0.0.0',PORT:'8788'}});
+    // The event-issued credential is scoped to the hackathon API. Keep the
+    // destination fixed here so an unrelated runtime setting cannot redirect it.
+    if(!container.running) container.start({image:'cloudflare/debian-trixie',instance:'lite',enableInternet:true,entrypoint:['node','-e',bootstrap],env:{QLOO_GATEWAY_TOKEN:this.env.QLOO_GATEWAY_TOKEN,QLOO_API_KEY:this.env.QLOO_API_KEY||'',QLOO_BASE_URL:'https://hackathon.api.qloo.com',QLOO_TRUSTED_BASE_URL:'https://hackathon.api.qloo.com',QLOO_DAILY_MAX_CALLS:this.env.QLOO_DAILY_MAX_CALLS||'100',BIND_HOST:'0.0.0.0',PORT:'8788'}});
     await container.setInactivityTimeout(15*60*1000);
     // Readiness retries only contact our own container, never Qloo.
     for(let n=0;n<50;n++){
