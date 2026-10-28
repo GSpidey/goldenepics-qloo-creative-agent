@@ -33,7 +33,7 @@ test('gateway receives only a bounded cultural query and server authorization', 
     assert.equal(String(url), 'https://gateway.example/insights');
     assert.equal(opts.headers.authorization, 'Bearer server-only-secret');
     assert.deepEqual(JSON.parse(opts.body), { type: 'book', ids: [id] });
-    assert.equal(opts.redirect, 'error');
+    assert.equal(opts.redirect, 'manual');
     return Response.json({ success: true, results: { entities: [{ entity_id: id, name: 'A public book' }] } });
   });
   assert.equal(result.source, 'Qloo'); assert.equal(result.items.length, 1);

@@ -1,0 +1,26 @@
+{
+  "main_module": "worker.mjs",
+  "compatibility_date": "2026-10-27",
+  "containers": [
+    {
+      "class_name": "QlooGateway"
+    }
+  ],
+  "bindings": [
+    {
+      "class_name": "QlooGateway",
+      "name": "GATEWAY",
+      "type": "durable_object_namespace"
+    }
+  ],
+  "keep_bindings": [
+    "secret_text"
+  ],
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
+  }
+}

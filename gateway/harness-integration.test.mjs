@@ -12,6 +12,7 @@ test('pinned Qloo harness executes both read tools and preserves entity response
     const url = new URL(req.url, 'http://localhost');
     seen.push(url);
     assert.equal(req.headers['x-api-key'], 'local-test-placeholder');
+    if(url.searchParams.get('filter.type') === 'urn:entity:brand'){res.writeHead(400,{'content-type':'application/json'});res.end(JSON.stringify({errors:[{message:'Private provider details: unsupported signal'}]}));return;}
     res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify({ success: true, results: { entities: [{ entity_id: id, name: 'Contract fixture', subtype: 'urn:entity:book', tags: [{ name: 'adventure' }] }] } }));
   });
@@ -25,6 +26,7 @@ test('pinned Qloo harness executes both read tools and preserves entity response
   assert.equal(normalizeEntities(search)[0].id, id);
   const insights = await runHarness(commandFor('insights', { type: 'book', ids: [id] }));
   assert.equal(normalizeEntities(insights)[0].tags[0], 'adventure');
+  await assert.rejects(runHarness(commandFor('insights',{type:'brand',ids:[id]})),error=>error.status===422 && !error.message.includes('Private provider'));
   assert.equal(seen[0].pathname, '/search');
   assert.equal(seen[0].searchParams.get('types'), 'urn:entity:book');
   assert.equal(seen[1].pathname, '/v2/insights');

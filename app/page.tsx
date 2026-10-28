@@ -55,7 +55,21 @@ export default function Home() {
       }
     } catch { setSaveState('Export a copy to keep your work'); }
     setReady(true);
-    fetch('/api/status').then(r => r.json() as Promise<{ research: string }>).then(d => setConnection(d.research)).catch(() => setConnection('setup'));
+    let stopped = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let checks = 0;
+    const checkConnection = async () => {
+      try {
+        const response = await fetch('/api/status');
+        const data = await response.json() as { research: string };
+        if (stopped) return;
+        setConnection(data.research);
+        // Only readiness is retried; this never repeats a Qloo research call.
+        if (data.research === 'warming' && ++checks < 8) timer = setTimeout(checkConnection, 15000);
+      } catch { if (!stopped) setConnection('setup'); }
+    };
+    void checkConnection();
+    return () => { stopped = true; if (timer) clearTimeout(timer); };
   }, []);
   useEffect(() => {
     if (!ready) return;
@@ -78,8 +92,9 @@ export default function Home() {
   }
   async function api(operation: string, body: object) {
     const response = await fetch('/api/research', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ operation, ...body }) });
-    const data = await response.json() as { items: Entity[]; message?: string; cached?: boolean };
-    if (!response.ok) throw new Error(data.message || 'Research is taking a little longer. Try again shortly.');
+    const data = await response.json() as { items: Entity[]; message?: string; kind?: string; cached?: boolean };
+    if (!response.ok) throw Object.assign(new Error(data.message || 'Research is taking a little longer. Try again shortly.'), {kind:data.kind});
+    setConnection('configured');
     return data;
   }
   async function search() {
@@ -100,6 +115,8 @@ export default function Home() {
     // One small request per category. Completed categories survive a partial outage.
     for (const category of ['book', 'movie', 'brand']) {
       if (version !== requestVersion.current) return;
+      const rejected = research?.trace.find(t => t.step === `Find ${category} connections` && t.status === 'change-reference');
+      if(rejected){next.trace.push(rejected);continue;}
       const retained = next.groups.find(g => g.type === category);
       if (retained?.items.length) { next.trace.push({ step: `Find ${category} connections`, status: 'retained', message: `Kept ${retained.items.length} available Qloo results from ${research?.fetchedAt}.` }); continue; }
       try {
@@ -107,13 +124,13 @@ export default function Home() {
         if (version !== requestVersion.current) return;
         next.groups = [...next.groups.filter(g => g.type !== category), { type: category, items: data.items }];
         next.trace.push({ step: `Find ${category} connections`, status: data.items.length ? 'complete' : 'empty', message: `${data.items.length} Qloo results${data.cached ? ' from the short-lived cache' : ''}.` });
-      } catch (e) { next.trace.push({ step: `Find ${category} connections`, status: 'retry', message: (e as Error).message }); }
+      } catch (e) { next.trace.push({ step: `Find ${category} connections`, status: (e as Error & {kind?:string}).kind === 'reference' ? 'change-reference' : 'retry', message: (e as Error).message }); }
     }
     if (version !== requestVersion.current) return;
     if (next.groups.some(g => g.items.length)) {
-      setResearch(next); setSelected(''); setTab('ideas'); setNotice(next.trace.some(t => t.status === 'retry') ? 'Your available research is ready. You can work with it and retry the other categories later.' : 'Cultural research is ready. Compare three creative interpretations below.');
+      setResearch(next); setSelected(''); setTab('ideas'); setNotice(next.trace.some(t => t.status === 'change-reference') ? 'Your available research is ready. The research trail shows which category needs another reference.' : next.trace.some(t => t.status === 'retry') ? 'Your available research is ready. You can work with it and retry the other categories later.' : 'Cultural research is ready. Compare three creative interpretations below.');
       output.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else setNotice(next.trace.find(t => t.status === 'retry')?.message || 'Try different references to find more cultural connections.');
+    } else setNotice(next.trace.find(t => ['retry','change-reference'].includes(t.status))?.message || 'Try different references to find more cultural connections.');
     setBusy('');
   }
   function download(format: 'json' | 'md') {

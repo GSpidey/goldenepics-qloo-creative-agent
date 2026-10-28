@@ -15,4 +15,4 @@ The live path starts from confirmed Qloo entity IDs, discovers cross-domain rela
 
 ## Evaluation and honest limits
 
-The tests compare contrasting cultural metadata and verify that treatments change. They are controlled fixtures, not measured real-world marketing results. No conversion uplift, individual preference inference, endorsement, LLM generation or finished media production is claimed. A live provider verification is required after key activation.
+The tests compare contrasting cultural metadata and verify that treatments change. They are controlled fixtures, not measured real-world marketing results. No conversion uplift, individual preference inference, endorsement, LLM generation or finished media production is claimed. Live search, book/movie/brand insights, partial-result retention, exports and reload persistence have been verified; see CURRENT_STATE.md. Some reference/category combinations have no usable signal. Add another reference when the app explains that a category needs one.

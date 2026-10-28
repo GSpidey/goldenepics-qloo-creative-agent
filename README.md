@@ -4,7 +4,7 @@ Turn cultural references into a campaign direction you can explain.
 
 A complete, scoped open-source application for the Qloo Agentic Hackathon. Describe a product, confirm cultural references, explore connected books, films and brands, then export a production brief with its evidence and research trail.
 
-**Current status:** interface, structured planner, exports and server gateway implemented. The fictional sample works without credentials. Live Qloo integration is **not yet verified**; event access is pending; a dedicated Cloudflare gateway has been provisioned. This is a development release, not a completed competition submission.
+**Current status:** public demo and event key activated. Real hosted Qloo search, book/movie/brand insights, creative directions, selected notes, Markdown/JSON exports and reload persistence have been verified. A book-only reference was rejected by Qloo for brand insights; successful categories stayed usable. See [current verification](docs/CURRENT_STATE.md). Devpost registration/submission is still pending.
 
 ## Workflow
 
@@ -104,3 +104,5 @@ This independently runnable module contributes audience research to GoldenEpics 
 ## Judging and activation
 
 See [key activation](docs/KEY_ACTIVATION.md), [judge walkthrough](docs/JUDGE_WALKTHROUGH.md) and [submission draft](devpost-submission.md). The draft explicitly marks unresolved gates. Cloudflare gateway source is in `gateway/cloudflare/`; build its embedded bootstrap with `node gateway/cloudflare/build-bootstrap.mjs`. It uses the managed Node image and installs the pinned lockfile with lifecycle scripts disabled.
+
+Gateway updates must retain `containers: [{"class_name":"QlooGateway"}]` and encrypted bindings. The checked-in `gateway/cloudflare/upload-metadata.json` is the exact upload configuration for the existing Worker. Omitting the container declaration can leave a new Durable Object runtime without its container handle. The Worker contains a one-time binding recovery reset that preserves durable quota/storage. Never reset quota to work around a provider allowance.

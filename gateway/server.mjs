@@ -31,10 +31,10 @@ export function runHarness(args) {
       let value;
       try { value = JSON.parse(stdout); } catch { value = null; }
       if (error || value?.success === false || value?.error) {
-        const providerStatus = value?.error?.status ?? value?.error?.statusCode ?? value?.status;
-        const status = [401, 403, 429].includes(providerStatus) ? providerStatus : value?.code === 'AUTH_FAILED' ? 401 : value?.code === 'RATE_LIMITED' ? 429 : 502;
+        const providerStatus = value?.error?.status ?? value?.error?.statusCode ?? value?.status ?? (value?.code === 'API_ERROR' ? Number(/^API request failed: (\d{3})\b/.exec(value.message || '')?.[1]) : undefined);
+        const status = providerStatus === 400 ? 422 : [401, 403, 429].includes(providerStatus) ? providerStatus : value?.code === 'AUTH_FAILED' ? 401 : value?.code === 'RATE_LIMITED' ? 429 : 502;
         // Raw provider output and stderr stay out of responses and logs.
-        reject(Object.assign(new Error('qloo_request_failed'), { status }));
+        reject(Object.assign(new Error('qloo_request_failed'), { status, diagnostic:{stage:'harness',kind:error?.killed?'timeout':error?'exit':'response',exitCode:typeof error?.code==='number'?error.code:null,signal:error?.signal||null} }));
       } else if (!value || typeof value !== 'object') reject(Object.assign(new Error('invalid_qloo_response'), { status: 502 }));
       else resolve(Array.isArray(value) ? { success: true, results: { entities: value } } : value);
     });
@@ -71,7 +71,7 @@ export function makeGateway({ token, execute = runHarness, configured = true, ma
         cache.set(key, { value, expires: now() + ttl });
         return send(200, { ...value, _gateway: { cached: false } });
       } finally { active--; pending.delete(key); }
-    } catch (error) { return send(error.status || 502, { error: error.status === 400 ? 'invalid_request' : 'qloo_request_unavailable', requestId }); }
+    } catch (error) { return send(error.status || 502, { error: error.status === 400 ? 'invalid_request' : 'qloo_request_unavailable', requestId, ...(error.diagnostic?{diagnostic:error.diagnostic}:{}) }); }
   };
 }
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
