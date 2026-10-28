@@ -1,61 +1,53 @@
 # GoldenEpics Qloo Creative Agent
 
-## One-line Summary
-Turn a rough business brief into a campaign plan—and see how cultural evidence changes the creative.
+Turn your audience’s cultural interests into campaign ideas, creative direction and an actionable production brief.
 
-## Problem
-Small businesses can describe what they sell, but translating their audience's interests into a specific creative direction takes research. Generic campaign templates often skip that connection, leaving teams with plausible ideas and little explanation of why they fit.
+## Turn audience taste into a campaign worth making
 
-## Solution
-Bring a campaign brief and public cultural references. Confirm the exact references, let the agent research related books, films and brands through Qloo, and compare three creative treatments. Each direction keeps its supporting entities, the signals used in the interpretation, a practical script or copy structure, production notes and an exportable brief.
+GoldenEpics Qloo Creative Agent helps small business owners and independent creatives turn a business brief into a campaign direction informed by what their audience enjoys. Describe the offer, choose cultural references, and leave with three creative treatments, the research behind them, and an editable brief to share with a designer, writer or video producer.
 
-## Why This Matters
-The target user is a small business owner or independent creative preparing an initial campaign. The product makes the research-to-creative decision visible, portable and open to challenge. Its value is a better-founded starting point; marketing effectiveness still needs testing.
+## From a brief to a creative direction
 
-## How We Used AI
-Qloo provides cultural intelligence through its event-supported public harness. The application orchestrates exact-entity lookup and bounded cross-domain research, then applies a transparent deterministic creative planner to returned tags and descriptions. It is an agentic research tool, not an LLM text generator. No separate model subscription is required. Fictional sample fixtures remain clearly labeled.
+1. **Shape the campaign.** Describe your product, audience and desired action, then choose a voice and format.
+2. **Find the cultural connection.** Search for books, films or brands your audience enjoys and confirm the exact references.
+3. **Explore with Qloo.** The agent researches connected books, films and brands and brings the results into one workspace.
+4. **Choose a direction.** Compare three treatments with hooks, script or copy structure, visual guidance and supporting cultural references.
+5. **Make it yours.** Add production notes and export the selected direction and its research as Markdown or JSON. Your workspace also saves on your device.
 
-## How We Used Codex
-Codex helped implement the React workspace, server adapter, authenticated Node harness gateway, evidence-sensitive planner, exports, tests and Cloudflare deployment. Testing caught a harness output-shape mismatch and a planner that reused treatments regardless of evidence; the current implementation addresses both. Real hosted search and book/movie/brand insights, partial-result recovery, exports and reload persistence have now been verified. Runtime tests also caught an unsupported Workers redirect mode and a missing container attachment during deployment.
+For a café owner planning a campaign, a favourite book and film become useful creative inputs: a way to explore atmosphere, storytelling and the details that could make the campaign feel familiar to its audience. The owner can inspect the connections, compare approaches and hand a clear brief to a creative collaborator.
 
-## Key Features
-- Exact cultural reference confirmation before research.
-- Three-domain research with retained partial results and bounded calls.
-- Evidence-sensitive treatments and a plain-product comparison.
-- Visible distinction between Qloo evidence and creative interpretation.
-- Editable notes, device-local persistence and Markdown/JSON exports.
-- Server-only credentials, protected gateway, deduplication and durable request ceiling.
+## What Qloo brings to the creative process
 
-## Architecture
-React/Vinext workspace → same-origin server route → authenticated Cloudflare Worker/Durable Object → Node container → pinned @qloo/qloo-harness 0.1.26 → Qloo. The product brief stays in the browser; cultural query names or selected entity IDs reach research. The public repository contains the complete scoped application and gateway; the broader commercial Studio is a separate private product and is not a runtime dependency.
+Qloo supplies the cultural connections that shape the recommendations. The agent coordinates reference lookup and research across categories, then a transparent rules-based planner uses the returned tags and descriptions to shape and rank creative treatments. Each treatment keeps its supporting references alongside the creative interpretation, making the reasoning easy to inspect.
 
-## Testing Instructions
-See docs/JUDGE_WALKTHROUGH.md and README.md. Tests run without paid calls. The event key is activated; docs/CURRENT_STATE.md records bounded live verification and its limitations.
+In a live walkthrough, combining *The Little Prince* with *The Grand Budapest Hotel* produced 18 references across books, films and brands. Adding the film changed the leading creative direction from “A small discovery” to “Made with intention.” This shows how a change in cultural evidence changes the campaign recommendation.
 
-## Public Demo Link
-https://goldenepics-qloo-creative-agent.bamidele-ada-9224.chatgpt.site
+A comparison view lets users see what cultural research adds to a product-led starting point.
 
-The demo is public; signed-out readiness and real hosted research have been verified.
+## Why it helps
 
-## Public Repository Link
-https://github.com/GSpidey/goldenepics-qloo-creative-agent
+Small teams get a practical way to connect audience interests with creative decisions. Research, concepts and production notes stay together, helping an owner explain a direction and helping a collaborator understand how to develop it. Editable notes and portable exports make the work useful beyond the first brainstorming session.
 
-## Demo Video
-Not required by the fetched Qloo submission requirements. Prioritize a functional public demo. Optional walkthrough outline: problem (15s), confirm references (25s), research and evidence (40s), compare treatment to baseline (25s), export (15s).
+The user stays in charge of the final creative choice. The app offers distinct directions and visible evidence to support that decision.
 
-## Screenshot Shot List
-Brief and overview; reference confirmation; compared directions; selected treatment with evidence; exported brief. Use live results only after verification; label any sample screenshots.
+## Try it
 
-## Submission Readiness Notes
-Submitted to the Qloo Agentic Hackathon and verified live on October 27, 2026 at 10:00 p.m. Vancouver (October 28 05:00 UTC). Devpost project 1514160; submission 1268630. Public page: https://devpost.com/software/goldenepics-qloo-creative-agent . Registration answers: Working solo; first time using Qloo. Rules, terms and eligibility approval were already recorded in the handoff.
+Open the [live workspace](https://goldenepics-qloo-creative-agent.bamidele-ada-9224.chatgpt.site/), enter a brief, and add cultural references. Research the connections, compare the directions, choose a favourite and export the brief.
 
-## Known Limitations
-Creative interpretation is rule-based. Sparse metadata needs human research. Evidence is aggregate, not personal profiling or a conversion probability. Device-local briefs need export for portability. The service may need time to start after inactivity. No finished video generation or social publication is included in this focused entry.
+The [public MIT-licensed repository](https://github.com/GSpidey/goldenepics-qloo-creative-agent) includes the complete application, setup instructions and a judge walkthrough.
 
-## Submitted Official Form Fields
-Verified against authenticated Qloo requirements on October 27, 2026 (Vancouver).
+## Built with
 
-- 28597 — When did you begin your project? **October 27, 2026. The standalone Qloo implementation began on this date; the broader GoldenEpics Studio concept and RiseQuest advertising work predate it.**
-- 28598 — The public URL to your project: **https://goldenepics-qloo-creative-agent.bamidele-ada-9224.chatgpt.site**
-- 28599 — Link to your PUBLIC code repo: **https://github.com/GSpidey/goldenepics-qloo-creative-agent**
-- 28701 — Existing-project improvements (optional): **New standalone app inspired by our existing Studio: exact Qloo references, cross-domain research, evidence-based treatments, provenance, exports and a server-side harness gateway. Studio stays separate; dependencies and starter are disclosed in the repo.**
+React, TypeScript and Vinext power the workspace. A server-side Cloudflare gateway runs Qloo’s harness for cultural research. Codex supported implementation and testing across the research flow, creative planner and exports. Validation includes 19 passing automated tests and a live walkthrough covering research, creative selection, exports and saved-workspace recovery.
+
+## Submitted form answers
+
+- Start date: October 27, 2026.
+- Public demo: https://goldenepics-qloo-creative-agent.bamidele-ada-9224.chatgpt.site/
+- Public repository: https://github.com/GSpidey/goldenepics-qloo-creative-agent
+- Qloo improvements: Qloo powers exact reference lookup and research across books, films and brands. The creative planner turns those connections into three campaign directions, with supporting references, editable production notes and an exportable brief.
+
+## Submission record
+
+Devpost project 1514160; submission 1268630. Submitted and verified live. Copy revised at the owner's request to focus on capabilities and audience benefits.
+https://devpost.com/software/goldenepics-qloo-creative-agent
